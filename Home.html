@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bollygrad Movies</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <style>
+        /* Reset */
+        body, h1, h2, h3, p, ul, li, a, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* General Layout */
+        body {
+            line-height: 1.6;
+            color: #fff;
+            background-color: #121212;
+        }
+
+        header {
+            background-color: #20232a;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo a {
+            color: #ff0000;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .navbar .logo a:hover {
+            color: #ff0000;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .nav-links li {
+            font-size: 1rem;
+        }
+
+        .navbar .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ff0000;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-container input {
+            padding: 8px;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            width: 250px;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input:focus {
+            border-color: #ff0000;
+            outline: none;
+        }
+
+        .search-container button {
+            padding: 8px 15px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #667fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('hero-bg.jpg') center/cover no-repeat;
+            color: #fff;
+            text-align: center;
+            padding: 70px 20px;
+            background: 10px;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            background-color: #ff0000;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #ff0000;
+        }
+
+        /* Section Layout */
+        .section {
+            padding: 30px 20px;
+            background: #1a1a1a;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff0000;
+            border-bottom: 2px solid #ff0000;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        /* Grid Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-info {
+            padding: 15px;
+        }
+
+        .card-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            color: #ff0000;
+        }
+
+        .card-info p {
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .details-button {
+            background-color: #ff0000;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .details-button:hover {
+            background-color: #ff0000;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal.hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .modal-content {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .close-button:hover {
+            color: #ff0000;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #20232a;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer .social-media a {
+            margin: 0 12px;
+        }
+
+        footer a {
+            color: #ff0000;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        footer a:hover {
+            color: #ff9966;
+        }
+
+        /* Reviews */
+        .review {
+            background: #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .review h3 {
+            font-size: 1.2rem;
+            color: #ff0000;
+            margin-bottom: 8px;
+        }
+
+        .review p {
+            font-size: 1rem;
+            color: #ddd;
+        }
+
+        .review .rating {
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .search-container input {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">Bollygrad Movies</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/movies">Movies</a></li>
+                <li><a href="/tv-shows">TV Shows</a></li>
+                <li><a href="/actors">Actors</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search movies, shows, actors...">
+                <button id="search-button" aria-label="Search">Search</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to Bollygrad Movies</h1>
+                <p>Your ultimate destination for Bollywood entertainment.</p>
+                <button class="cta-button">Explore Now</button>
+            </div>
+        </section>
+
+        <!-- New Releases Section -->
+        <section class="section new-releases">
+            <h2>New Releases</h2>
+            <div class="content-grid" id="new-releases">
+                <!-- Dynamic Content Placeholder -->
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section class="section trending">
+            <h2>Trending Now</h2>
+            <div class="content-grid" id="trending">
+                <!-- Trending Content Placeholder -->
+            </div>
+        </section>
+
+        <!-- Favorites Section -->
+        <section class="section favorites">
+            <h2>Your Favorites</h2>
+            <div class="content-grid" id="favorites">
+                <!-- Favorites Content Placeholder -->
+            </div>
+        </section>
+
+        <!-- User Reviews Section -->
+        <section class="section reviews">
+            <h2>User Reviews</h2>
+            <div class="reviews-container" id="user-reviews">
+                <!-- Dynamic Reviews Placeholder -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-media">
+                <a href="#" target="_blank"><img src="facebook-icon.png" alt="Facebook"></a>
+                <a href="#" target="_blank"><img src="twitter-icon.png" alt="Twitter"></a>
+                <a href="#" target="_blank"><img src="instagram-icon.png" alt="Instagram"></a>
+            </div>
+            <p>&copy; 2024 Bollygrad Movies. All Rights Reserved.</p>
+            <nav class="footer-links">
+                <a href="/privacy">Privacy Policy</a> | 
+                <a href="/terms">Terms of Service</a>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- Modal for Movie Details -->
+    <div id="movie-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-button">&times;</button>
+            <h2 id="modal-title">Movie Title</h2>
+            <img id="modal-image" src="" alt="Movie Details">
+            <p id="modal-description">Detailed description of the movie...</p>
+            <p id="modal-cast">Cast: <span></span></p>
+            <p id="modal-genre">Genre: <span></span></p>
+            <button id="favorite-button">Add to Favorites</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for Dynamic Content, Modal, and Favorites
+
+        // Sample Data
+        const movies = [
+            { title: "Movie Title 1", releaseDate: "2024", description: "An exciting new movie.", image: "movie1.jpg", cast: "Actor A, Actor B", genre: "Action" },
+            { title: "Movie Title 2", releaseDate: "2023", description: "A thrilling adventure.", image: "movie2.jpg", cast: "Actor C, Actor D", genre: "Drama" },
+            { title: "Movie Title 3", releaseDate: "2024", description: "A gripping drama.", image: "movie3.jpg", cast: "Actor E, Actor F", genre: "Drama" },
+            { title: "Movie Title 4", releaseDate: "2022", description: "A fun comedy.", image: "movie4.jpg", cast: "Actor G, Actor H", genre: "Comedy" },
+            { title: "Movie Title 5", releaseDate: "2024", description: "An action-packed movie.", image: "movie5.jpg", cast: "Actor I, Actor J", genre: "Action" }
+        ];
+
+        const reviews = [
+            { user: "Jane Doe", comment: "Amazing collection of movies!", rating: "5/5" },
+            { user: "John Smith", comment: "Loved the variety!", rating: "4.5/5" },
+            { user: "Alice Green", comment: "Great selection!", rating: "4/5" },
+            { user: "Bob White", comment: "Needs more action movies.", rating: "3/5" },
+            { user: "Emma Blue", comment: "Fantastic site overall.", rating: "5/5" }
+        ];
+
+        // Function to display movies dynamically
+        function displayMovies(sectionId, movies) {
+            const container = document.getElementById(sectionId);
+            container.innerHTML = "";
+            movies.forEach(movie => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <img src="${movie.image}" alt="${movie.title}">
+                    <div class="card-info">
+                        <h3>${movie.title}</h3>
+                        <p>${movie.description}</p>
+                        <button class="details-button" onclick="showDetails('${movie.title}')">Details</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Function to display reviews dynamically
+        function displayReviews(reviews) {
+            const container = document.getElementById("user-reviews");
+            container.innerHTML = "";
+            reviews.forEach(review => {
+                const reviewCard = document.createElement("div");
+                reviewCard.classList.add("review");
+                reviewCard.innerHTML = `
+                    <h3>${review.user}</h3>
+                    <p>${review.comment}</p>
+                    <p class="rating">${review.rating}</p>
+                `;
+                container.appendChild(reviewCard);
+            });
+        }
+
+        // Show movie details modal
+        function showDetails(title) {
+            const movie = movies.find(movie => movie.title === title);
+            const modal = document.getElementById("movie-modal");
+            const closeButton = document.querySelector(".close-button");
+
+            document.getElementById("modal-title").innerText = movie.title;
+            document.getElementById("modal-description").innerText = movie.description;
+            document.getElementById("modal-cast").querySelector("span").innerText = movie.cast;
+            document.getElementById("modal-genre").querySelector("span").innerText = movie.genre;
+            document.getElementById("modal-image").src = movie.image;
+
+            modal.classList.remove("hidden");
+
+            closeButton.addEventListener("click", () => {
+                modal.classList.add("hidden");
+            });
+        }
+
+        // Display sections when the page loads
+        document.addEventListener("DOMContentLoaded", () => {
+            displayMovies('new-releases', movies);
+            displayMovies('trending', movies);
+            displayMovies('favorites', movies);
+            displayReviews(reviews);
+        });
+    </script>
+</body>
+</html>
